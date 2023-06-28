@@ -1,44 +1,32 @@
+<div id="auth_form">
+ <div class="wrapper" >
 
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<h2>User Profile</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  <div class="field input-box">
+    <%= f.text_field :first_name, autofocus: true, placeholder: "Enter First Name", required: true %>
+  </div>
+    <div class="field input-box">
+    <%= f.text_field :last_name, autofocus: true, placeholder: "Enter Last Name", required: true %>
   </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
+    <div class="field input-box">
+    <%= f.text_field :mobile_number, autofocus: true, placeholder: "Enter Mobile Number",  pattern: "[0-9]{10}", required: true %>
   </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
 
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
+  
 
-  <div class="actions">
-    <%= f.submit "Update" %>
+  <div class="actions input-box button">
+    <%= f.submit "Submit" %>
   </div>
 <% end %>
 
-<h3>Cancel my account</h3>
+<div>If you want to change password, sign out and click on forgot password. </div>
 
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
+<div> <%= button_to "Delete account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
 
 <%= link_to "Back", :back %>

@@ -20,9 +20,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    # binding.pry
+    current_user.first_name = user_params[:first_name]
+    current_user.last_name = user_params[:last_name]
+    current_user.mobile_number = user_params[:mobile_number]
+
+    if current_user.save(validate: false)
+      redirect_to root_path
+    else
+      redirect_to edit_user_registration_path
+    end
+  end
 
   # DELETE /resource
   # def destroy
@@ -49,6 +58,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def configure_account_update_params
   #   devise_parameter_sanitizer.permit(:account_update, keys: [:attribute])
   # end
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :mobile_number)
+  end
 
   # The path used after sign up.
   # def after_sign_up_path_for(resource)

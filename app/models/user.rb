@@ -7,45 +7,59 @@ class User < ApplicationRecord
     (?=.*[A-Z])        # Must contain an upper case character
     (?=.*[[:^alnum:]]) # Must contain a symbol
     /x
-  # Include default devise modules. Others available are:
-  # :timeoutable, :trackable and :omniauthable
+
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, 
+         :recoverable, :rememberable, :validatable,
          :confirmable, :lockable, :omniauthable, omniauth_providers: [:google_oauth2]
 
+  validates :mobile_number, :presence => true,
+                            :numericality => true,
+                            :length => { :minimum => 10, :maximum => 15 },
+                            if: :not_omniauth_user?
 
-  validates :mobile_number,:presence => true,
-                  :numericality => true,
-                  :length => { :minimum => 10, :maximum => 15 },
-                  if: :not_omniauth_user?
-  
-  validates :password, 
-    presence: true,  
-    format: { with: PASSWORD_FORMAT }, 
-    confirmation: true, 
-    on: :create
-  
-  validates :password, 
-    format: { with: PASSWORD_FORMAT }, 
-    confirmation: true, 
-    on: :update
+  validates :password, presence: true, format: { with: PASSWORD_FORMAT, message: "Not matching password format" }, confirmation: true, if: :not_omniauth_user?
 
+  validates :password_confirmation, presence: true, if: :not_omniauth_user?
 
-    after_create :assign_role 
+  after_create :assign_role
 
-    def self.from_google(u)
-      create_with(uid: u[:uid], provider: 'google',
-                  password: Devise.friendly_token[0, 20]).find_or_create_by!(email: u[:email])
+  def self.from_google(u)
+    @user = find_by(email: u[:email])
+
+    unless @user
+      @password = generate_password_for_omniuser
+      create(uid: u[:uid], provider: "google",
+             password: @password, email: u[:email])
+    else
+      @user
+    end
+  end
+
+  def self.generate_password_for_omniuser
+    valid_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+'
+
+    random_string = []
+    random_string << valid_chars[rand(valid_chars.length)]
+    random_string << valid_chars[rand(valid_chars.length)]
+    random_string << valid_chars[rand(valid_chars.length)]
+    random_string << valid_chars[rand(valid_chars.length)]
+
+    # Generate the remaining random characters
+    8.times do
+      random_char = valid_chars[rand(valid_chars.length)]
+      random_string << random_char
     end
 
-    private 
+    random_string.join
+  end
 
-    def assign_role 
-      self.add_role(:customer)
-    end
+  private
 
-    def not_omniauth_user? 
-      !self.provider?
-    end
+  def assign_role
+    self.add_role(:customer)
+  end
 
+  def not_omniauth_user?
+    !self.provider?
+  end
 end
