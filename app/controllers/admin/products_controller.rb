@@ -1,6 +1,61 @@
 class Admin::ProductsController < ApplicationController
     layout "admin"
     before_action :authenticate_user!
-    def index 
+    before_action :authenticate_admin_user?, except: [:index, :show]
+    before_action :set_product, only: %i[ show edit update destroy ]
+  
+    def index
+      @products = Product.all
     end
+  
+
+    def show
+    end
+  
+
+    def new
+      @product = Product.new
+    end
+  
+
+    def edit
+    end
+
+    def create
+      @product = Product.new(product_params)
+  
+      respond_to do |format|
+        if @product.save
+          redirect_to product_url(@product), notice: "Product was successfully created." 
+        else
+          render :new, status: :unprocessable_entity 
+        end
+      end
+    end
+
+    def update
+      respond_to do |format|
+        if @product.update(product_params)
+          redirect_to product_url(@product), notice: "Product was successfully updated."
+        else
+          render :edit, status: :unprocessable_entity 
+        end
+      end
+    end
+  
+    def destroy
+      @product.destroy
+         redirect_to products_url, notice: "Product was successfully destroyed."
+  
+      end
+    end
+  
+    private
+      def set_product
+        @product = Product.find(params[:id])
+      end
+
+      def product_params
+        params.require(:product).permit(:name, :price, :description, :brand, :category_id, :weight,  pictures: [], )
+      end
 end
