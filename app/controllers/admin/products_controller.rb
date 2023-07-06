@@ -1,11 +1,11 @@
 class Admin::ProductsController < ApplicationController
     layout "admin"
     before_action :authenticate_user!
-    before_action :authenticate_admin_user?, except: [:index, :show]
+    before_action :authenticate_admin_user?
     before_action :set_product, only: %i[ show edit update destroy ]
   
     def index
-      @products = Product.all
+      @products = Product.page params[:page]
     end
   
 
@@ -15,39 +15,36 @@ class Admin::ProductsController < ApplicationController
 
     def new
       @product = Product.new
+      @categories = Category.all
     end
   
 
-    def edit
+    def edit 
+      @categories = Category.all
     end
 
     def create
       @product = Product.new(product_params)
-  
-      respond_to do |format|
-        if @product.save
-          redirect_to product_url(@product), notice: "Product was successfully created." 
-        else
-          render :new, status: :unprocessable_entity 
-        end
+      if @product.save
+        redirect_to admin_products_path, notice: "Product was successfully created." 
+      else
+        @categories = Category.all
+        render :new, status: :unprocessable_entity 
       end
     end
 
     def update
-      respond_to do |format|
         if @product.update(product_params)
-          redirect_to product_url(@product), notice: "Product was successfully updated."
+          redirect_to admin_products_path, notice: "Product was successfully updated."
         else
+          @categories = Category.all  
           render :edit, status: :unprocessable_entity 
         end
-      end
     end
   
     def destroy
       @product.destroy
-         redirect_to products_url, notice: "Product was successfully destroyed."
-  
-      end
+         redirect_to admin_products_path, notice: "Product was successfully destroyed."
     end
   
     private
@@ -56,6 +53,6 @@ class Admin::ProductsController < ApplicationController
       end
 
       def product_params
-        params.require(:product).permit(:name, :price, :description, :brand, :category_id, :weight,  pictures: [], )
+        params.require(:product).permit(:name, :price, :description, :brand, :category_id, :weight, :main_picture, pictures: [], )
       end
 end

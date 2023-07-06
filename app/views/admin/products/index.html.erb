@@ -1,1 +1,51 @@
-Hello admin !
+<div class="title text-center">
+<div>
+  <%= link_to "New Product", new_admin_product_path %>
+</div> 
+<br>
+  <h1>Product List</h1>
+</div>
+<table class="table table-striped  text-center">
+  <thead>
+    <th scope="col">ID</th> 
+    <th scope="col">Product Name</th>
+    <th scope="col">description</th>
+    <th scope="col">Price</th>
+    <th scope="col">Brand</th>
+    <th scope="col">Category</th>
+    <th scope="col">Weight</th>
+  </thead>
+
+  <tbody>
+    <% for product in @products %> 
+      <tr>
+        <td><%= product.id %> </td>
+        <td><%= product.name %> </td>
+        <td><%= product.description %> </td>
+        <td><%= product.price %> </td>
+        <td><%= product.brand %> </td>
+        <td><%= product.category.name %> </td>
+        <td><%= product.weight %> </td>
+          <td>
+          <div>
+            <%= link_to "View", admin_product_path(product) %>
+          </div>
+        </td>
+        <td>
+          <div>
+            <%= link_to "Edit", edit_admin_product_path(product) %>
+          </div>
+        </td>
+
+        <td>
+          <div>
+          <%= link_to "Delete", admin_product_path(product), class: "btn btn-danger", data: {turbo_method: :delete, turbo_confirm: "Do you want to delete product ?" }%>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  <tbody>
+</table> 
+<div>
+<%= paginate @products %>
+</div>

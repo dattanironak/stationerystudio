@@ -1,0 +1,61 @@
+<div class="container"> 
+
+    <div class= "btn btn-warning">
+        <h1><%= link_to "Edit", edit_admin_product_path(@product) %></h1>
+    </div>
+    <% if @product.main_picture  %>
+      <% if @product.main_picture.representable? %>
+        <p>Main Picture: </p> 
+
+        <%= image_tag @product.main_picture %>   
+    <% end %>
+    <% end %>
+<br>
+        <p>Other Pictures:</p> 
+
+  <% @product.pictures.each do |file| %>
+
+      <% if file.representable? %>
+        <%= image_tag file  %>
+      <% else %>
+        <%= link_to rails_blob_path(file, disposition: "attachment") do %>
+          <%= image_tag "placeholder.png", alt: "Download file" %>
+        <% end %>
+      <% end %>
+  <% end %>
+<br>
+<h1> Product Details </h1> 
+<br>
+<p><strong>Name : </strong>
+<%=  @product.name %>
+</p>
+
+<p><strong>Brand : </strong>
+<%= @product.brand %>
+</p>
+
+<p><strong>Price : </strong>
+
+<%=   @product.price %>
+<br>
+</p>
+
+<p><strong>Description : </strong>
+
+<%=  @product.description %>
+<br>
+</p>
+
+<p><strong>Category : </strong>
+
+<%= @product.category.name %>
+<br>
+</p>
+
+<p><strong>Weight : </strong>
+
+<%=  @product.weight %>
+<br>
+</p>
+
+</div>

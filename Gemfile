@@ -51,7 +51,7 @@ gem "devise"
 gem "rolify"
 gem "pundit"
 gem "omniauth-google-oauth2"
-
+gem "kaminari"
 gem "omniauth-rails_csrf_protection"
 group :development, :test do
 gem "pry"

@@ -1,0 +1,72 @@
+<div class="container">
+<h1>New Product</h1>
+  <%= render "devise/shared/error_messages", resource: @product %>
+
+<%=  form_with(url:  admin_products_path, model: @product, method: :post ) do |form| %>
+
+    <div class="row">  
+      <div class="col-4">
+        <%= form.label :name %>
+        <%= form.text_field :name, class: "form-control", required: true %>
+        </div>
+    </div>
+<br>
+
+    <div class="row">  
+      <div class="col-4">
+        <%= form.label :brand %>
+        <%= form.text_field :brand, class: "form-control", required: true %>
+        </div>
+    </div>  
+<br>
+
+<div class="row">  
+      <div class="col-4">
+        <%= form.label :description %>
+        <%= form.text_field :description, class: "form-control", required: true %>
+        </div>
+    </div>
+<br>
+    
+    <div class="row">  
+      <div class="col-4">
+        <%= form.label :price %>
+        <%= form.number_field :price,  class: "form-control", required: true, pattern: "[0-9]*"%>
+    </div>
+    </div>
+<br>
+    
+    <div class="row">  
+      <div class="col-4">
+        <%= form.label :weight %>
+        <%= form.number_field :weight,  class: "form-control", required: true,  pattern: "[0-9]*" %>
+    </div>
+    </div>
+<br>
+    <div class="row">  
+      <div class="col-4">
+        <%= form.label :main_picture %>
+        <%= form.file_field :main_picture, class: "form-control", required: true %>
+    </div>
+    </div>
+<br>
+    <div class="row">  
+      <div class="col-4">
+        <%= form.label :pictures %>
+        <%= form.file_field :pictures, class: "form-control", multiple: true %>
+    </div>
+    </div>
+<br>
+
+    <div class="row">  
+      <div class="col-4">
+        <%= form.label :category %>
+        
+        <% options = options_from_collection_for_select(@categories, 'id', 'name') %>
+        <%= form.select :category_id, options,  class: "form-control btn btn-secondary dropdown-toggle" %>
+        </div>
+    </div>
+    <br>
+    <%= form.submit class: "btn btn-primary " %>
+<% end %>
+<div>
