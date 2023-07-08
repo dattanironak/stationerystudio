@@ -1,0 +1,31 @@
+<div class="title text-center">
+
+<h1>Order List</h1>
+</div>
+<table class="table table-striped  text-center">
+  <thead>
+    <th scope="col">ID</th> 
+    <th scope="col">Customer</th>
+    <th scope="col">Address</th>
+    <th scope="col">Deliver To</th>
+    <th scope="col">Status</th>
+    <th scope="col">Items</th>
+    
+
+  </thead>
+
+  <tbody>
+    <% for order in @orders %> 
+      <tr>
+        <td><%= order.id %> </td>
+        <td><%= order.user.first_name + " "+ order.user.last_name %>  </td>
+        <td><%= order.address.line1 + "," + order.address.line2 + ", " + order.address.city + ", " + order.address.district + " - " + order.address.pincode.to_s %> </td>
+        <td><%= order.address.name + " " + order.address.contact_number %> </td>
+        <td><%= order.status %> </td>
+        <td><%= order.order_details.count %> </td>
+
+
+      </tr>
+    <% end %>
+  <tbody>
+</table> 

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :products do 
       get '/page/:page', action: :index, on: :collection
     end
+    get "orders/:status", to: "orders#index", as: :orders
   end
   
 end
